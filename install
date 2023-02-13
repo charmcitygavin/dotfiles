@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-# Bail if there's an error
 set -e
+
+# Set variables
+SYSTEM_TYPE=$(uname -s) # Get system type - Linux / macOS (Darwin)
 
 set_up_dotbot () {
     CONFIG="install.conf.yaml"
@@ -17,15 +19,16 @@ set_up_dotbot () {
     "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 }
 
-install_apps () {
-    echo -e "Installing Homebrew applications:"
+install_homebrew_apps () {
+    if [ "$SYSTEM_TYPE" = "Darwin" ]; then
+        echo -e "Installing Homebrew applications:"
 
-    # ~/.Brewfile was set up by Dotbot
-    brew bundle install --global
+        # Installs packages in ~/.Brewfile, which was set up by Dotbot:
+        brew bundle install --global
+    fi
 }
-
 
 # Let's begin!
 set_up_dotbot
-install_apps
+install_homebrew_apps
 # Fin
