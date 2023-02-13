@@ -1,11 +1,11 @@
 - defaults:
   link:
-	relink: true
+    relink: true
 
-- clean: ['~']
+- clean: ["~"]
 
 - link:
-	~/.zshrc: zshrc
+    ~/.zshrc: zshrc
 
 - shell:
-	- [git submodule update --init --recursive, Installing submodules]
+    - [git submodule update --init --recursive, Installing submodules]
