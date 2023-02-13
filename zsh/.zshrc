@@ -8,7 +8,6 @@ export ZSH="${HOME}/.oh-my-zsh"
 # oh-my-zsh plugins
 plugins=(
   git
-  osx
 )
 
 source $ZSH/oh-my-zsh.sh
