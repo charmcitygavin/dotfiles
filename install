@@ -23,12 +23,16 @@ install_homebrew_apps () {
     if [ "$SYSTEM_TYPE" = "Darwin" ]; then
         echo -e "Installing Homebrew applications:"
 
-        # Installs packages in ~/.Brewfile, which was set up by Dotbot:
-        brew bundle install --global
+        brew bundle install --file ${XDG_CONFIG_HOME}/.Brewfile
     fi
+}
+
+finish_up () {
+    source "${HOME}/.zshenv"
 }
 
 # Let's begin!
 set_up_dotbot
 install_homebrew_apps
+finish_up
 # Fin
