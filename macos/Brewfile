@@ -1,0 +1,4 @@
+brew "bat"
+brew "micro"
+brew "neofetch"
+brew "speedtest-cli"
