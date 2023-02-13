@@ -1,16 +1,16 @@
 - defaults:
-  link:
-    relink: true
+    link:
+      relink: true
 
 - clean: ["~"]
 
 - link:
-  ~/.zshrc: zsh/.zshrc
-  ~/.oh-my-zsh: zsh/oh-my-zsh
+    ~/.zshrc: zsh/.zshrc
+    ~/.oh-my-zsh: zsh/oh-my-zsh
 
-  ~/.Brewfile:
-    if: "[ `uname` = Darwin ]"
-    path: macos/Brewfile
+    ~/.Brewfile:
+      if: "[ `uname` = Darwin ]"
+      path: macos/Brewfile
 
 - shell:
     - [git submodule update --init --recursive, Installing submodules]
