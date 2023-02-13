@@ -28,7 +28,7 @@ install_homebrew_apps () {
 }
 
 finish_up () {
-    source "${HOME}/.zshenv"
+    source "${XDG_CONFIG_HOME}/zsh/.zshenv"
 }
 
 # Let's begin!
