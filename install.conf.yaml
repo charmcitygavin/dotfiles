@@ -5,17 +5,22 @@
 
 - clean: ["~", "${XDG_CONFIG_HOME}"]
 
-- link:
-    ~/.zshenv: { path: zsh/.zshenv, force: true }
-    ${XDG_CONFIG_HOME}/zsh: zsh
-    ${XDG_CONFIG_HOME}/.oh-my-zsh: zsh/oh-my-zsh
+- shell:
+    - [git submodule update --init --recursive, Installing submodules]
 
+    - description: Set XDG environment variables
+      command: source ./zsh/.zshenv
+
+- link:
+    # Essential configs
+    ${XDG_CONFIG_HOME}/.zshenv: { path: zsh/.zshenv, force: true }
+    ${XDG_CONFIG_HOME}/zsh: zsh
     ${XDG_CONFIG_HOME}/.Brewfile:
       if: "[ `uname` = Darwin ]"
       path: macos/Brewfile
 
-- shell:
-    - description: Set XDG environment variables
-      command: source ./zsh/.zshenv
+    ~/.oh-my-zsh: oh-my-zsh
 
-    - [git submodule update --init --recursive, Installing submodules]
+    # Utility config files
+    # ${XDG_CONFIG_HOME}/git/.gitconfig: general/.gitconfig
+
