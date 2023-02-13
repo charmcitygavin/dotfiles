@@ -1,5 +1,7 @@
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
+######################################################################
+# ~/.dotfiles/zsh/.zshrc                                                  #
+######################################################################
+
 
 # Path to your oh-my-zsh installation.
 export ZSH="${HOME}/.oh-my-zsh"
@@ -14,46 +16,6 @@ function ql {
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 # ZSH_THEME="robbyrussell"
-
-# Font mode for powerlevel9k
-# POWERLEVEL9K_MODE='nerdfont-complete'
-
-# Set theme
-# ZSH_THEME="powerlevel9k/powerlevel9k"
-
-# Prompt elements
-# POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(custom_user dir vcs)
-# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(time)
-# POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(custom_bitcoin_price time)
-# POWERLEVEL9K_CUSTOM_BITCOIN_PRICE_BACKGROUND='208'
-
-# Colors
-# POWERLEVEL9K_DIR_HOME_FOREGROUND='white'
-# POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND='white'
-# POWERLEVEL9K_DIR_ETC_FOREGROUND='white'
-# POWERLEVEL9K_DIR_DEFAULT_FOREGROUND='white'
-
-# POWERLEVEL9K_DIR_HOME_BACKGROUND='055'
-# POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND='055'
-# POWERLEVEL9K_DIR_ETC_BACKGROUND='055'
-# POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='055'
-
-# Prompt settings
-# POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
-# POWERLEVEL9K_VCS_GIT_HOOKS=(vcs-detect-changes git-untracked git-stash git-remotebranch git-tagname)
-# POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-# POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=$'%K{white}%k'
-# POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX=$'%K{055}%F{white} \uf155 %f%F{055}%k\ue0b0%f '
-# POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-
-# Prompt separators
-# P9K_LEFT_SEGMENT_SEPARATOR_ICON=$'\ue0b0'
-
-# User with skull
-# user_with_icon() {
-#     echo -n "\uf749 $(whoami)"
-# }
-# POWERLEVEL9K_CUSTOM_USER="user_with_icon"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -163,17 +125,3 @@ export NVM_DIR="$HOME/.nvm"
 # [ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 eval "$(starship init zsh)"
-
-### MANAGED BY MACPRO Workspace Setup - DO NOT EDIT - homebrew
-# eval "$(/usr/local/bin/brew shellenv)"
-### MANAGED BY MACPRO Workspace Setup - DO NOT EDIT - homebrew
-
-### MANAGED BY MACPRO Workspace Setup - DO NOT EDIT - nvm
-# export NVM_DIR=/Users/gavinst.ours/.nvm
-#   [ -s /usr/local/opt/nvm/nvm.sh ] && \. /usr/local/opt/nvm/nvm.sh  # This loads nvm
-#   [ -s /usr/local/opt/nvm/etc/bash_completion.d/nvm ] && \. /usr/local/opt/nvm/etc/bash_completion.d/nvm  # This loads nvm bash_completion
-### MANAGED BY MACPRO Workspace Setup - DO NOT EDIT - nvm
-
-### MANAGED BY MACPRO Workspace Setup - DO NOT EDIT - direnv
-# eval "$(direnv hook zsh)"
-### MANAGED BY MACPRO Workspace Setup - DO NOT EDIT - direnv
