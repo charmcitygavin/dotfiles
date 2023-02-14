@@ -1,7 +1,21 @@
-brew "asciinema"
+# Taps
+tap "romkatv/powerlevel10k"
+
+# Essentials
+brew "git"
+brew "tmux"
+
+# Basics
 brew "bat"
+brew "micro"
+
+# Monitoring and Performance
+brew "speedtest-cli"
+
+# CLI External Services
+brew "asciinema"
+
+# CLI Fun
 brew "figlet"
 brew "lolcat"
-brew "micro"
 brew "neofetch"
-brew "speedtest-cli"
