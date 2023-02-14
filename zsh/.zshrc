@@ -15,6 +15,7 @@ fi
 # Path to your oh-my-zsh installation
 export ZSH=$HOME/.oh-my-zsh
 
+# oh-my-zsh theme
 ZSH_THEME=robbyrussell
 
 # oh-my-zsh plugins
