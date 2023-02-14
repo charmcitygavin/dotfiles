@@ -15,6 +15,16 @@ function welcome() {
 	echo $greeting | figlet -f invita | lolcat
 }
 
+function system_info() {
+	neofetch --shell_version off \
+      --disable model resolution shell de wm wm_theme theme icons distro kernel \
+      --backend off \
+      --color_blocks off \
+      --memory_display info
+
+}
+
 welcome
+system_info
 
 # EOF
