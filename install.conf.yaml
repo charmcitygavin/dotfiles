@@ -25,6 +25,9 @@
     # oh-my-zsh config
     ${HOME}/.oh-my-zsh: oh-my-zsh
 
+    # newsboat
+    ${HOME}/.newsboat/urls: utils/newsboat/urls
+
     # Utilities
     ${XDG_CONFIG_HOME}/utils: utils
 
