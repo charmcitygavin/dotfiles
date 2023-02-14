@@ -1,5 +1,7 @@
 brew "asciinema"
 brew "bat"
+brew "figlet"
+brew "lolcat"
 brew "micro"
 brew "neofetch"
 brew "speedtest-cli"

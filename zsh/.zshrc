@@ -4,6 +4,7 @@
 
 # Directory for all-things ZSH config
 zsh_dir=${${ZDOTDIR}:-$HOME/.config/zsh}
+utils_dir="${XDG_CONFIG_HOME}/utils"
 
 # Source all ZSH config files (if present)
 if [[ -d $zsh_dir ]]; then
@@ -21,6 +22,11 @@ ZSH_THEME=robbyrussell
 # oh-my-zsh
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
+
+# Utilities
+if [[ -d $utils_dir ]]; then
+  source ${utils_dir}/motd.sh
+fi
 
 # macOS-specific config
 if [ "$(uname -s)" = "Darwin" ]; then
