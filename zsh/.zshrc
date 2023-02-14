@@ -6,26 +6,28 @@
 zsh_dir=${${ZDOTDIR}:-$HOME/.config/zsh}
 utils_dir="${XDG_CONFIG_HOME}/utils"
 
-# Path to your oh-my-zsh installation
-export OMZSH=$HOME/.oh-my-zsh
-
-# oh-my-zsh theme
-ZSH_THEME=robbyrussell
-
-# oh-my-zsh
-plugins=(git)
-source $OMZSH/oh-my-zsh.sh
-
 # Source all ZSH config files (if present)
 if [[ -d $zsh_dir ]]; then
-  # Configure ZSH stuff
+
+  # Configure ZSH history and completion
+  # NOTE: Do this before loading oh-my-zsh
   source ${zsh_dir}/lib/history.zsh
   source ${zsh_dir}/lib/completion.zsh
 
-  # Import alias files
-  source ${zsh_dir}/aliases/general.zsh
-fi
+  # oh-my-zsh
+  ## Path to oh-my-zsh installation
+  export OMZSH=$HOME/.oh-my-zsh
+  ## oh-my-zsh theme
+  ZSH_THEME=robbyrussell
+  ## oh-my-zsh
+  plugins=(git)
+  source $OMZSH/oh-my-zsh.sh
 
+  # Import alias files
+  # NOTE: Do this after loading oh-my-zsh
+  source ${zsh_dir}/aliases/general.zsh
+  
+fi
 
 # Utilities
 if [[ -d $utils_dir ]]; then
