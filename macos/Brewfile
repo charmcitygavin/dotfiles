@@ -4,7 +4,11 @@ brew "tmux"
 
 # Basics
 brew "bat"
+brew "exa"
 brew "micro"
+
+# Reference
+brew "tldr"
 
 # Monitoring and Performance
 brew "speedtest-cli"
