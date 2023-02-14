@@ -18,9 +18,8 @@ export ZSH=$HOME/.oh-my-zsh
 # oh-my-zsh theme
 ZSH_THEME=robbyrussell
 
-# oh-my-zsh plugins
+# oh-my-zsh
 plugins=(git)
-
 source $ZSH/oh-my-zsh.sh
 
 # macOS-specific config
