@@ -24,8 +24,10 @@ source $ZSH/oh-my-zsh.sh
 
 # macOS-specific config
 if [ "$(uname -s)" = "Darwin" ]; then
+
   # Add Brew to path, if it's installed
   if [[ -d /opt/homebrew/bin ]]; then
     export PATH=/opt/homebrew/bin:$PATH
   fi
+
 fi
