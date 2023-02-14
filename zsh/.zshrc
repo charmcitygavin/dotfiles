@@ -29,11 +29,6 @@ if [[ -d $zsh_dir ]]; then
   
 fi
 
-# Utilities
-if [[ -d $utils_dir ]]; then
-  source ${utils_dir}/motd.sh
-fi
-
 # macOS-specific config
 if [ "$(uname -s)" = "Darwin" ]; then
 
@@ -44,4 +39,9 @@ if [ "$(uname -s)" = "Darwin" ]; then
 
   # Satisfy Homebrew warning
   export PATH="/usr/local/sbin:$PATH"
+fi
+
+# Utilities
+if [[ -d $utils_dir ]]; then
+  source ${utils_dir}/motd.sh
 fi
