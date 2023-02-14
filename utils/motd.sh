@@ -16,15 +16,27 @@ function welcome() {
 }
 
 function system_info() {
-	neofetch --shell_version off \
-      --disable model resolution shell de wm wm_theme theme icons distro kernel \
+	neofetch \
+      --disable model resolution shell de wm wm_theme theme icons distro kernel cpu gpu \
       --backend off \
       --color_blocks off \
       --memory_display info
+}
 
+function more_info() {
+	timeout=0.5
+	
+	# Print date time
+	echo -e "$(date '+🗓️  Date: %A, %B %d, %Y at %H:%M')"
+
+	# Print local weather
+	curl -s -m $timeout "wttr.in?format=%cWeather:+%C+%t,+%w"
+
+	echo -e "\n"
 }
 
 welcome
 system_info
+more_info
 
 # EOF
