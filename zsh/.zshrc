@@ -6,22 +6,26 @@
 zsh_dir=${${ZDOTDIR}:-$HOME/.config/zsh}
 utils_dir="${XDG_CONFIG_HOME}/utils"
 
-# Source all ZSH config files (if present)
-if [[ -d $zsh_dir ]]; then
-  # Configure ZSH stuff
-  source ${zsh_dir}/lib/history.zsh
-  source ${zsh_dir}/lib/completion.zsh
-fi
-
 # Path to your oh-my-zsh installation
-export ZSH=$HOME/.oh-my-zsh
+export OMZSH=$HOME/.oh-my-zsh
 
 # oh-my-zsh theme
 ZSH_THEME=robbyrussell
 
 # oh-my-zsh
 plugins=(git)
-source $ZSH/oh-my-zsh.sh
+source $OMZSH/oh-my-zsh.sh
+
+# Source all ZSH config files (if present)
+if [[ -d $zsh_dir ]]; then
+  # Configure ZSH stuff
+  source ${zsh_dir}/lib/history.zsh
+  source ${zsh_dir}/lib/completion.zsh
+
+  # Import alias files
+  source ${zsh_dir}/aliases/general.zsh
+fi
+
 
 # Utilities
 if [[ -d $utils_dir ]]; then
@@ -39,4 +43,3 @@ if [ "$(uname -s)" = "Darwin" ]; then
   # Satisfy Homebrew warning
   export PATH="/usr/local/sbin:$PATH"
 fi
-
