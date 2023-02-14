@@ -17,6 +17,7 @@ brew "speedtest-cli"
 brew "asciinema"
 
 # CLI Fun
+brew "cmatrix"
 brew "figlet"
 brew "lolcat"
 brew "neofetch"
