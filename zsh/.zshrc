@@ -36,4 +36,7 @@ if [ "$(uname -s)" = "Darwin" ]; then
     export PATH=/opt/homebrew/bin:$PATH
   fi
 
+  # Satisfy Homebrew warning
+  export PATH="/usr/local/sbin:$PATH"
 fi
+
