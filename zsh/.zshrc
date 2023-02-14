@@ -9,6 +9,7 @@ zsh_dir=${${ZDOTDIR}:-$HOME/.config/zsh}
 if [[ -d $zsh_dir ]]; then
   # Configure ZSH stuff
   source ${zsh_dir}/lib/history.zsh
+  source ${zsh_dir}/lib/completion.zsh
 fi
 
 # Path to your oh-my-zsh installation
