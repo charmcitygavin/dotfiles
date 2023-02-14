@@ -2,6 +2,15 @@
 # ~/dotfiles/zsh/.zshrc                                              #
 ######################################################################
 
+# Directory for all-things ZSH config
+zsh_dir=${${ZDOTDIR}:-$HOME/.config/zsh}
+
+# Source all ZSH config files (if present)
+if [[ -d $zsh_dir ]]; then
+  # Configure ZSH stuff
+  source ${zsh_dir}/lib/history.zsh
+fi
+
 # Path to your oh-my-zsh installation
 export ZSH=$HOME/.oh-my-zsh
 
