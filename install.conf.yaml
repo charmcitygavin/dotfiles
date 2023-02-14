@@ -13,7 +13,7 @@
 
 - link:
     # Essential configs
-    ~/.zshenv: { path: zsh/.zshenv, force: true }
+    ${HOME}/.zshenv: { path: zsh/.zshenv, force: true }
     ${XDG_CONFIG_HOME}/zsh: zsh
     ${XDG_CONFIG_HOME}/tmux: tmux
 
@@ -23,7 +23,7 @@
       path: macos/Brewfile
 
     # oh-my-zsh config
-    ~/.oh-my-zsh: oh-my-zsh
+    ${HOME}/.oh-my-zsh: oh-my-zsh
 
     # Utilities
     ${XDG_CONFIG_HOME}/utils: utils
