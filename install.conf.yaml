@@ -17,10 +17,12 @@
     ${XDG_CONFIG_HOME}/zsh: zsh
     ${XDG_CONFIG_HOME}/tmux: tmux
 
+    # Homebrew config
     ${XDG_CONFIG_HOME}/.Brewfile:
       if: "[ `uname` = Darwin ]"
       path: macos/Brewfile
 
+    # oh-my-zsh config
     ~/.oh-my-zsh: oh-my-zsh
 
     # Utility config files
