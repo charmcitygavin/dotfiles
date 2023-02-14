@@ -13,7 +13,7 @@
 
 - link:
     # Essential configs
-    ${XDG_CONFIG_HOME}/.zshenv: { path: zsh/.zshenv, force: true }
+    ~/.zshenv: { path: zsh/.zshenv, force: true }
     ${XDG_CONFIG_HOME}/zsh: zsh
     ${XDG_CONFIG_HOME}/.Brewfile:
       if: "[ `uname` = Darwin ]"
