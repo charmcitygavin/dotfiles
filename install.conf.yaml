@@ -17,6 +17,9 @@
     ${XDG_CONFIG_HOME}/zsh: zsh
     ${XDG_CONFIG_HOME}/tmux: tmux
 
+    ${XDG_DATA_HOME}/tmux/tpm: lib/tpm
+    ${XDG_DATA_HOME}/tmux/plugins/tpm: lib/tpm
+
     # Homebrew config
     ${XDG_CONFIG_HOME}/.Brewfile:
       if: "[ `uname` = Darwin ]"
