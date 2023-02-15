@@ -30,6 +30,7 @@ brew "asciinema"
 # CLI Fun                                                            #
 ######################################################################
 brew "cmatrix"
+brew "cointop"
 brew "figlet"
 brew "lolcat"
 brew "neofetch"
