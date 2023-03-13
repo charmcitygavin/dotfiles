@@ -30,6 +30,7 @@
 
     # newsboat
     ${HOME}/.newsboat/urls: utils/newsboat/urls
+    ${HOME}/.newsboat/config: utils/newsboat/config
 
     # Utilities
     ${XDG_CONFIG_HOME}/utils: utils
