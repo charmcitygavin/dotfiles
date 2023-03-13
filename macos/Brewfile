@@ -34,6 +34,7 @@ brew "cointop"
 brew "figlet"
 brew "lolcat"
 brew "neofetch"
+brew "newsboat"
 
 ######################################################################
 # macOS                                                              #

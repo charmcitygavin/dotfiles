@@ -20,7 +20,10 @@ if [[ -d $zsh_dir ]]; then
   ## oh-my-zsh theme
   ZSH_THEME=robbyrussell
   ## oh-my-zsh
-  plugins=(git)
+  plugins=(
+  	git
+  	zsh-autosuggestions
+  )
   source $OMZSH/oh-my-zsh.sh
 
   # Import alias files
