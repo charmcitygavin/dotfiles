@@ -24,14 +24,14 @@ function system_info() {
 }
 
 function more_info() {
-	timeout=1.0
+	timeout=3.0
 	
 	# Print date time
 	echo -e "$(date '+🗓️  Date: %A, %B %d, %Y at %H:%M')"
 
 	# Print local weather
-	# curl -s -m $timeout "wttr.in&format=%cWeather:+%C+%t+%m,+%w"
-	curl -s -m $timeout "wttr.in?m&format=%cWeather:+%C+%t+%m,+%w"
+	curl -s -m $timeout "wttr.in?format=%cWeather:+%C+%t+%m,+%w"
+	# curl -s -m $timeout "wttr.in?m&format=%cWeather:+%C+%t+%m,+%w"
 
 	echo -e "\n"
 }
