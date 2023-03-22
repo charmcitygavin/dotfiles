@@ -48,3 +48,5 @@ fi
 if [[ -d $utils_dir ]]; then
   source ${utils_dir}/motd.sh
 fi
+
+eval "$(zoxide init zsh)"

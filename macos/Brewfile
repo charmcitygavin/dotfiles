@@ -9,7 +9,9 @@ brew "tmux"
 ######################################################################
 brew "bat"
 brew "exa"
+brew "fzf" # For fuzzy search within zoxide
 brew "micro"
+brew "zoxide"
 
 ######################################################################
 # Reference                                                          #
