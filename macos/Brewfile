@@ -8,7 +8,7 @@ brew "tmux"
 # Basics                                                             #
 ######################################################################
 brew "bat"
-brew "exa"
+brew "eza"
 brew "fzf" # For fuzzy search within zoxide
 brew "micro"
 brew "zoxide"
