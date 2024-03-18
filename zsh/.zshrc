@@ -22,7 +22,6 @@ if [[ -d $zsh_dir ]]; then
   ## oh-my-zsh
   plugins=(
   	git
-  	zsh-autosuggestions
   )
   source $OMZSH/oh-my-zsh.sh
 
