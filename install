@@ -35,6 +35,5 @@ finish_up () {
 # Let's begin!
 set_up_dotbot
 install_homebrew_apps
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 finish_up
 # Fin
