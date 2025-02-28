@@ -15,14 +15,6 @@ function welcome() {
 	echo $greeting | figlet -f invita | lolcat
 }
 
-function system_info() {
-	neofetch \
-      --disable model resolution shell de wm wm_theme theme icons distro kernel cpu gpu \
-      --backend off \
-      --color_blocks off \
-      --memory_display info
-}
-
 function more_info() {
 	timeout=3.0
 	
@@ -37,7 +29,7 @@ function more_info() {
 }
 
 welcome
-system_info
+fastfetch
 more_info
 
 # EOF
