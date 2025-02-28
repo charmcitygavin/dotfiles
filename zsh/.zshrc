@@ -48,4 +48,8 @@ if [[ -d $utils_dir ]]; then
   source ${utils_dir}/motd.sh
 fi
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+export PATH="$HOME/.nvm/versions/node/$(nvm version)/bin:$PATH"
+
 eval "$(zoxide init zsh)"
