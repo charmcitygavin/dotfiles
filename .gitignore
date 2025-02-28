@@ -1,2 +1,5 @@
 .DS_STORE
 /zsh/.zcompdump
+.zsh_history
+.zsh_sessions
+oh-my-zsh
