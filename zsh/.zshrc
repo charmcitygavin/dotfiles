@@ -48,8 +48,17 @@ if [[ -d $utils_dir ]]; then
   source ${utils_dir}/motd.sh
 fi
 
+# Check if nvm is installed, install if not
+if ! command -v nvm &> /dev/null; then
+  echo "nvm not found, installing..."
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+fi
+
+# Create NVM directory if it doesn't exist
+[ ! -d "$HOME/.nvm" ] && mkdir "$HOME/.nvm"
+
 export NVM_DIR="$HOME/.nvm"
-[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-export PATH="$HOME/.nvm/versions/node/$(nvm version)/bin:$PATH"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # Load nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Optional: Load bash_completion
 
 eval "$(zoxide init zsh)"
