@@ -49,13 +49,13 @@ if [[ -d $utils_dir ]]; then
 fi
 
 # Check if nvm is installed, install if not
-if ! command -v nvm &> /dev/null; then
-  echo "nvm not found, installing..."
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-fi
+# if ! command -v nvm &> /dev/null; then
+#   echo "nvm not found, installing..."
+#   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+# fi
 
 # Create NVM directory if it doesn't exist
-[ ! -d "$HOME/.nvm" ] && mkdir "$HOME/.nvm"
+# [ ! -d "$HOME/.nvm" ] && mkdir "$HOME/.nvm"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # Load nvm
