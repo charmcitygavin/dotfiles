@@ -62,3 +62,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # Optional: Load bash_completion
 
 eval "$(zoxide init zsh)"
+
+# Local overrides — machine-specific config, private aliases, secrets
+# This file is never committed to git
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
