@@ -31,6 +31,9 @@ if [[ -d $zsh_dir ]]; then
   
 fi
 
+# Standard PATH additions
+export PATH="$HOME/.local/bin:$PATH"
+
 # macOS-specific config
 if [ "$(uname -s)" = "Darwin" ]; then
 
@@ -39,8 +42,6 @@ if [ "$(uname -s)" = "Darwin" ]; then
     export PATH=/opt/homebrew/bin:$PATH
   fi
 
-  # Satisfy Homebrew warning
-  export PATH="/usr/local/sbin:$PATH"
 fi
 
 # Utilities
