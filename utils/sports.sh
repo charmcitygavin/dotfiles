@@ -28,11 +28,13 @@ espn_game() {
     ) // empty |
     (.competitions[0].competitors[] | select(.homeAway == "away") | .team.shortDisplayName) as $away |
     (.competitions[0].competitors[] | select(.homeAway == "home") | .team.shortDisplayName) as $home |
+    (.competitions[0].competitors[] | select(.homeAway == "away") | .score) as $ascore |
+    (.competitions[0].competitors[] | select(.homeAway == "home") | .score) as $hscore |
     .status.type.state as $s |
     .status.type.shortDetail as $d |
     if $s == "pre"  then "\($emoji) \($away) @ \($home) \($d)"
-    elif $s == "in" then "\($emoji) \($away) @ \($home) \($d)"
-    else                 "\($emoji) \($away) @ \($home) Final"
+    elif $s == "in" then "\($emoji) \($away) \($ascore)-\($hscore) \($home) \($d)"
+    else                 "\($emoji) \($away) \($ascore)-\($hscore) \($home) Final"
     end
   ' 2>/dev/null | sed 's|[0-9]*/[0-9]* - ||;s/ PM E[SD]T/p/;s/ AM E[SD]T/a/'
 }
@@ -72,10 +74,10 @@ unrivaled_today() {
 
 add() { [[ -n "$1" ]] && PARTS+=("$1"); }
 
-add "$(espn_game baseball/mlb                        BAL  ⚾)"
+add "$(espn_game baseball/mlb                         BAL  ⚾)"
 add "$(espn_game basketball/nba                       GS   🏀)"
-add "$(espn_game basketball/mens-college-basketball   MSU  🏀)"
-add "$(espn_game basketball/womens-college-basketball MSU  🏀)"
+add "$(espn_game basketball/mens-college-basketball   MSU  🏀M)"
+add "$(espn_game basketball/womens-college-basketball MSU  🏀W)"
 add "$(unrivaled_today)"
 add "$(f1_today)"
 
