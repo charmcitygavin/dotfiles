@@ -20,7 +20,7 @@ PARTS=()
 # Outputs a formatted string or nothing if not playing today.
 espn_game() {
   local path="$1" abbr="$2" emoji="$3"
-  curl -sf --max-time 5 "$ESPN/$path/scoreboard" | \
+  curl -sf --max-time 5 "$ESPN/$path/scoreboard?dates=$(date +%Y%m%d)" | \
   jq -r --arg abbr "$abbr" --arg emoji "$emoji" '
     first(
       .events[] |
@@ -43,7 +43,7 @@ espn_game() {
 f1_today() {
   local today
   today=$(date +%Y-%m-%d)
-  curl -sf --max-time 5 "$ESPN/racing/f1/scoreboard" | \
+  curl -sf --max-time 5 "$ESPN/racing/f1/scoreboard?dates=$(date +%Y%m%d)" | \
   jq -r --arg today "$today" '
     first(
       .events[] |
