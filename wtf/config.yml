@@ -14,7 +14,7 @@ wtf:
       odd: white
   grid:
     columns: [50, 68, 62]
-    rows: [12, 12, 6, 5]
+    rows: [12, 6, 6, 6, 5]
   refreshInterval: 1
   openFileUtil: "open"
   mods:
@@ -51,7 +51,7 @@ wtf:
       position:
         top: 1
         left: 0
-        height: 1
+        height: 2
         width: 1
       refreshInterval: 300
     clocks:
@@ -66,6 +66,7 @@ wtf:
         Baltimore: "America/New_York"
         San_Francisco: "America/Los_Angeles"
         Phoenix: "America/Phoenix"
+        French_Alps: "Europe/Paris"
       position:
         top: 1
         left: 1
@@ -73,6 +74,18 @@ wtf:
         width: 1
       refreshInterval: 15
       sort: "alphabetical"
+    btc:
+      type: cmdrunner
+      cmd: "/Users/gavin/.config/utils/btc.sh"
+      args: []
+      enabled: true
+      title: "₿ Bitcoin"
+      position:
+        top: 2
+        left: 1
+        height: 1
+        width: 1
+      refreshInterval: 300
     ip:
       type: ipinfo
       title: "My IP"
@@ -83,14 +96,14 @@ wtf:
       position:
         top: 1
         left: 2
-        height: 1
+        height: 2
         width: 1
       refreshInterval: 150
     resources:
       type: resourceusage
       enabled: true
       position:
-        top: 2
+        top: 3
         left: 0
         height: 2
         width: 1
@@ -100,29 +113,29 @@ wtf:
       title: "⚡️ Battery"
       enabled: true
       position:
-        top: 2
+        top: 3
         left: 1
         height: 1
         width: 1
       refreshInterval: 15
+    security:
+      type: security
+      title: "🔒 Security"
+      enabled: true
+      position:
+        top: 3
+        left: 2
+        height: 2
+        width: 1
+      refreshInterval: 3600
     uptime:
       type: cmdrunner
       cmd: "uptime"
       args: []
       enabled: true
       position:
-        top: 3
+        top: 4
         left: 1
         height: 1
         width: 1
       refreshInterval: 30
-    security:
-      type: security
-      title: "🔒 Security"
-      enabled: true
-      position:
-        top: 2
-        left: 2
-        height: 2
-        width: 1
-      refreshInterval: 3600
