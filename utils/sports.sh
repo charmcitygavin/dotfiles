@@ -1,27 +1,34 @@
 #!/usr/bin/env bash
-# sports.sh — today's games for tmux status bar
+# sports.sh — today's games dashboard
+# Usage: watch -n 60 ~/.config/utils/sports.sh
 # Dotfiles: ~/dotfiles/utils/sports.sh → ~/.config/utils/sports.sh
-# Tmux:     set -g status-right '#(~/.config/utils/sports.sh) | ...'
-#           set -g status-interval 30
 
-CACHE_FILE="/tmp/.sports_cache"
+CACHE_DIR="/tmp/.sports_cache"
+mkdir -p "$CACHE_DIR"
 CACHE_TTL=300  # 5 minutes
 
-# Return cached result if still fresh (avoids hammering APIs on every status poll)
-if [[ -f "$CACHE_FILE" ]] && (( $(date +%s) - $(stat -f %m "$CACHE_FILE") < CACHE_TTL )); then
-  cat "$CACHE_FILE"
-  exit 0
-fi
-
 ESPN="https://site.api.espn.com/apis/site/v2/sports"
-PARTS=()
+GAMES=()
 
-# Fetch a team's game from an ESPN scoreboard endpoint.
-# Outputs a formatted string or nothing if not playing today.
+# Fetch from ESPN with per-endpoint caching
+espn_fetch() {
+  local path="$1"
+  local cache="$CACHE_DIR/$(echo "$path" | tr '/' '_')"
+  if [[ -f "$cache" ]] && (( $(date +%s) - $(stat -f %m "$cache") < CACHE_TTL )); then
+    cat "$cache"
+  else
+    local result
+    result=$(curl -sf --max-time 5 "$ESPN/$path/scoreboard?dates=$(date +%Y%m%d)")
+    echo "$result" > "$cache"
+    echo "$result"
+  fi
+}
+
+# Format a single ESPN team's game
 espn_game() {
-  local path="$1" abbr="$2" emoji="$3"
-  curl -sf --max-time 5 "$ESPN/$path/scoreboard?dates=$(date +%Y%m%d)" | \
-  jq -r --arg abbr "$abbr" --arg emoji "$emoji" '
+  local path="$1" abbr="$2" emoji="$3" label="$4"
+  local result
+  result=$(espn_fetch "$path" | jq -r --arg abbr "$abbr" '
     first(
       .events[] |
       select(any(.competitions[0].competitors[]; .team.abbreviation == $abbr))
@@ -32,19 +39,31 @@ espn_game() {
     (.competitions[0].competitors[] | select(.homeAway == "home") | .score) as $hscore |
     .status.type.state as $s |
     .status.type.shortDetail as $d |
-    if $s == "pre"  then "\($emoji) \($away) @ \($home) \($d)"
-    elif $s == "in" then "\($emoji) \($away) \($ascore)-\($hscore) \($home) \($d)"
-    else                 "\($emoji) \($away) \($ascore)-\($hscore) \($home) Final"
+    if $s == "pre"  then "pre|\($away) @ \($home)|\($d)"
+    elif $s == "in" then "live|\($away) @ \($home)|\($ascore)-\($hscore) \($d)"
+    else                 "final|\($away) @ \($home)|\($ascore)-\($hscore) Final"
     end
-  ' 2>/dev/null | sed 's|[0-9]*/[0-9]* - ||;s/ PM E[SD]T/p/;s/ AM E[SD]T/a/'
+  ' 2>/dev/null)
+  [[ -z "$result" ]] && return
+  local state matchup detail
+  IFS='|' read -r state matchup detail <<< "$result"
+  local detail_fmt
+  detail_fmt=$(echo "$detail" | sed 's|[0-9]*/[0-9]* - ||; s/ PM ET/p/; s/ AM ET/a/; s/ PM EST/p/; s/ AM EST/a/; s/ PM EDT/p/; s/ AM EDT/a/')
+  printf "%-4s %-24s %s\n" "$emoji" "$matchup" "$detail_fmt"
 }
 
-# F1: any session scheduled for today
+# F1: any session today
 f1_today() {
-  local today
+  local today cache result
   today=$(date +%Y-%m-%d)
-  curl -sf --max-time 5 "$ESPN/racing/f1/scoreboard?dates=$(date +%Y%m%d)" | \
-  jq -r --arg today "$today" '
+  cache="$CACHE_DIR/f1"
+  if [[ -f "$cache" ]] && (( $(date +%s) - $(stat -f %m "$cache") < CACHE_TTL )); then
+    result=$(cat "$cache")
+  else
+    result=$(curl -sf --max-time 5 "$ESPN/racing/f1/scoreboard?dates=$(date +%Y%m%d)")
+    echo "$result" > "$cache"
+  fi
+  echo "$result" | jq -r --arg today "$today" '
     first(
       .events[] |
       select((.date | split("T")[0]) == $today)
@@ -52,43 +71,39 @@ f1_today() {
     .shortName as $name |
     .status.type.state as $s |
     .status.type.shortDetail as $d |
-    if $s == "pre"  then "🏎️  \($name) \($d)"
-    elif $s == "in" then "🏎️  \($name) \($d)"
-    else                 "🏎️  \($name) Final"
+    if $s == "pre"  then "pre|\($name)|\($d)"
+    elif $s == "in" then "live|\($name)|\($d)"
+    else                 "final|\($name)|Final"
     end
-  ' 2>/dev/null | sed 's|[0-9]*/[0-9]* - ||;s/ PM E[SD]T/p/;s/ AM E[SD]T/a/'
+  ' 2>/dev/null | (
+    IFS='|' read -r state name detail || return
+    [[ -z "$name" ]] && return
+    detail_fmt=$(echo "$detail" | sed 's|[0-9]*/[0-9]* - ||; s/ PM ET/p/; s/ AM ET/a/; s/ PM EST/p/; s/ AM EST/a/')
+    printf "%-4s %-24s %s\n" "🏎️ " "$name" "$detail_fmt"
+  )
 }
 
-# Unrivaled: scrape their schedule page for today's first game time
-unrivaled_today() {
-  local today_pat html times fmt
-  today_pat=$(date "+%a, %b %-d, %Y")
-  html=$(curl -sf --max-time 5 "https://www.unrivaled.basketball/schedule" 2>/dev/null)
-  [[ -z "$html" ]] && return
-  echo "$html" | grep -q "$today_pat" || return
-  times=$(echo "$html" | grep -A 50 "$today_pat" | grep -oE '[0-9]+:[0-9]+ [AP]M ET' | head -1)
-  [[ -z "$times" ]] && return
-  fmt=$(echo "$times" | sed 's|[0-9]*/[0-9]* - ||;s/ PM E[SD]T/p/;s/ AM E[SD]T/a/')
-  echo "🏀 Unrivaled $fmt"
-}
+# Header
+printf "\n  🏟  TODAY'S GAMES — %s\n" "$(date '+%a %b %-d')"
+printf "  %s\n" "──────────────────────────────────"
 
-add() { [[ -n "$1" ]] && PARTS+=("$1"); }
+# Collect games
+orioles=$(espn_game  baseball/mlb                         BAL  ⚾   "Orioles")
+ravens=$(espn_game   football/nfl                         BAL  🏈   "Ravens")
+warriors=$(espn_game basketball/nba                       GS   🏀   "Warriors")
+msu_m=$(espn_game   basketball/mens-college-basketball   MSU  "🏀M" "MSU Men")
+msu_w=$(espn_game   basketball/womens-college-basketball MSU  "🏀W" "MSU Women")
+f1=$(f1_today)
 
-add "$(espn_game baseball/mlb                         BAL  ⚾)"
-add "$(espn_game basketball/nba                       GS   🏀)"
-add "$(espn_game basketball/mens-college-basketball   MSU  🏀M)"
-add "$(espn_game basketball/womens-college-basketball MSU  🏀W)"
-add "$(unrivaled_today)"
-add "$(f1_today)"
+any=0
+for game in "$orioles" "$ravens" "$warriors" "$msu_m" "$msu_w" "$f1"; do
+  if [[ -n "$game" ]]; then
+    echo "  $game"
+    any=1
+  fi
+done
 
-# Join with " | " — output nothing if no games
-OUTPUT=""
-if (( ${#PARTS[@]} > 0 )); then
-  OUTPUT="${PARTS[0]}"
-  for p in "${PARTS[@]:1}"; do
-    OUTPUT+=" | $p"
-  done
-fi
+[[ $any -eq 0 ]] && echo "  No games today."
 
-echo "$OUTPUT" > "$CACHE_FILE"
-[[ -n "$OUTPUT" ]] && echo "$OUTPUT"
+printf "  %s\n" "──────────────────────────────────"
+printf "  Updated %s\n\n" "$(date '+%-I:%M%p' | tr '[:upper:]' '[:lower:]')"
