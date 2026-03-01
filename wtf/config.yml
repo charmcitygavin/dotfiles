@@ -63,10 +63,10 @@ wtf:
           odd: "white"
       enabled: true
       locations:
-        Baltimore: "America/New_York"
-        San_Francisco: "America/Los_Angeles"
-        Phoenix: "America/Phoenix"
         French_Alps: "Europe/Paris"
+        Baltimore: "America/New_York"
+        Phoenix: "America/Phoenix"
+        San_Francisco: "America/Los_Angeles"
       position:
         top: 1
         left: 1
