@@ -33,6 +33,7 @@ brew "asciinema"
 # CLI Fun                                                            #
 ######################################################################
 brew "watch"
+brew "wtfutil"
 brew "cmatrix"
 brew "figlet"
 brew "fastfetch"

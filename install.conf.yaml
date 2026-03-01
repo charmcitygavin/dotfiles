@@ -35,5 +35,6 @@
 
     # Utilities
     ${XDG_CONFIG_HOME}/utils: utils
+    ${XDG_CONFIG_HOME}/wtf: wtf
 
     # ${XDG_CONFIG_HOME}/git/.gitconfig: general/.gitconfig
