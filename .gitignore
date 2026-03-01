@@ -3,4 +3,5 @@
 .zsh_history
 .zsh_sessions
 oh-my-zsh
-.zshrc.localwtf/log.txt
+.zshrc.local
+wtf/log.txt
