@@ -73,7 +73,7 @@ wtf:
         height: 1
         width: 1
       refreshInterval: 15
-      sort: ""
+      sort: "reversechronological"
     btc:
       type: cmdrunner
       cmd: "/Users/gavin/.config/utils/btc.sh"
