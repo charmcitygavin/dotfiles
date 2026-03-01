@@ -19,7 +19,7 @@ wtf:
   openFileUtil: "open"
   mods:
     sports:
-      cmd: "$HOME/.config/utils/sports.sh"
+      cmd: "/Users/gavin/.config/utils/sports.sh"
       args: []
       enabled: true
       refreshInterval: 300
