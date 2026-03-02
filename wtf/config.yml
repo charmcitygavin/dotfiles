@@ -20,8 +20,8 @@ wtf:
   mods:
     weather:
       type: cmdrunner
-      cmd: "/Users/gavin/.config/utils/weather.sh"
-      args: []
+      cmd: "/bin/sh"
+      args: ["-c", "$HOME/.config/utils/weather.sh"]
       enabled: true
       title: "⛅ Weather"
       position:
@@ -44,8 +44,8 @@ wtf:
       refreshInterval: 900
     sports:
       type: cmdrunner
-      cmd: "/Users/gavin/.config/utils/sports.sh"
-      args: []
+      cmd: "/bin/sh"
+      args: ["-c", "$HOME/.config/utils/sports.sh"]
       enabled: true
       title: "🏟 Today's Games"
       position:
@@ -76,8 +76,8 @@ wtf:
       sort: "reversechronological"
     btc:
       type: cmdrunner
-      cmd: "/Users/gavin/.config/utils/btc.sh"
-      args: []
+      cmd: "/bin/sh"
+      args: ["-c", "$HOME/.config/utils/btc.sh"]
       enabled: true
       title: "₿ Bitcoin"
       position:
