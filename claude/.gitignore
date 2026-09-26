@@ -1,0 +1,10 @@
+# Deny by default: this repo is public, and ~/.claude runtime state must never land here.
+*
+!.gitignore
+!CLAUDE.md
+!philosophy.md
+!settings.base.json
+!render-settings.sh
+!statusline-command.sh
+!hooks/
+!hooks/guard-bash.sh

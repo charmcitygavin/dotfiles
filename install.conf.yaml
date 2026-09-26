@@ -37,4 +37,14 @@
     ${XDG_CONFIG_HOME}/utils: utils
     ${XDG_CONFIG_HOME}/wtf: wtf
 
+    # Claude Code: one link per file, because ~/.claude also holds runtime state
+    ${HOME}/.claude/CLAUDE.md: { path: claude/CLAUDE.md, force: true }
+    ${HOME}/.claude/statusline-command.sh: { path: claude/statusline-command.sh, force: true }
+    ${HOME}/.claude/hooks/guard-bash.sh: { path: claude/hooks/guard-bash.sh, force: true }
+
     # ${XDG_CONFIG_HOME}/git/.gitconfig: general/.gitconfig
+
+- shell:
+    - description: Render Claude Code settings from the base and this machine's overlay
+      command: ./claude/render-settings.sh
+      stderr: true
