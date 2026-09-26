@@ -23,6 +23,8 @@ install_homebrew_apps () {
     if [ "$SYSTEM_TYPE" = "Darwin" ]; then
         echo -e "Installing Homebrew applications:"
 
+        # Update Homebrew first so it understands the latest formula API
+        brew update
         brew bundle install --file ${XDG_CONFIG_HOME}/.Brewfile
     fi
 }
