@@ -21,8 +21,7 @@ brew "tlrc"
 ######################################################################
 # Monitoring and Performance                                         #
 ######################################################################
-tap "teamookla/speedtest"
-brew "teamookla/speedtest/speedtest"
+brew "speedtest-go"
 
 ######################################################################
 # CLI External Services                                              #
