@@ -19,7 +19,14 @@ m() { printf '%s' "$FLAT" | grep -Eq "$1"; }
 mi() { printf '%s' "$FLAT" | grep -Eqi "$1"; }
 
 # git
-m "$GIT +(commit|push|rebase|filter-branch|filter-repo)( |$)" && deny "git commit, push, and history rewrites are Gavin's"
+m "$GIT +(push|rebase|filter-branch|filter-repo)( |$)" && deny "git push and history rewrites are Gavin's"
+# Commits are allowed only in ~/wiki, and only when nothing in the command could point git elsewhere.
+if m "$GIT +commit( |$)"; then
+  CWD=$(printf '%s' "$INPUT" | jq -r '.cwd // empty')
+  [ "$(git -C "$CWD" rev-parse --show-toplevel 2>/dev/null)" = "$HOME/wiki" ] || deny "git commit outside ~/wiki"
+  m '(^|[^[:alnum:]_.-])(cd|pushd)( |$)|(^| )-C |--git-dir|--work-tree|GIT_DIR=|GIT_WORK_TREE=' && deny "git commit alongside a directory or repo change"
+  m "$GIT +commit .*--amend" && deny "git commit --amend"
+fi
 m "$GIT +reset +(-[a-zA-Z]+ +)*(--hard|--merge)" && deny "git reset --hard"
 m "$GIT +clean( +-[a-zA-Z]*[fdx])" && deny "git clean"
 m "$GIT +branch +(-[a-zA-Z]*D|--delete +--force|-D)" && deny "forced branch delete"
