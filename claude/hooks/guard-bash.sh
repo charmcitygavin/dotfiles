@@ -20,10 +20,15 @@ mi() { printf '%s' "$FLAT" | grep -Eqi "$1"; }
 
 # git
 m "$GIT +(push|rebase|filter-branch|filter-repo)( |$)" && deny "git push and history rewrites are Gavin's"
-# Commits are allowed only in ~/wiki, and only when nothing in the command could point git elsewhere.
+# Commits are allowed only in repos listed in the untracked ~/.claude/commit-repos (one path per line,
+# ~/ expanded, # comments), and only when nothing in the command could point git elsewhere.
 if m "$GIT +commit( |$)"; then
   CWD=$(printf '%s' "$INPUT" | jq -r '.cwd // empty')
-  [ "$(git -C "$CWD" rev-parse --show-toplevel 2>/dev/null)" = "$HOME/wiki" ] || deny "git commit outside ~/wiki"
+  TOP=$(git -C "$CWD" rev-parse --show-toplevel 2>/dev/null)
+  REPOS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/commit-repos"
+  [ -n "$TOP" ] && [ -f "$REPOS" ] \
+    && sed -e 's/#.*//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e "s|^~/|$HOME/|" "$REPOS" | grep -Fxq -- "$TOP" \
+    || deny "git commit in a repo not listed in ~/.claude/commit-repos"
   m '(^|[^[:alnum:]_.-])(cd|pushd)( |$)|(^| )-C |--git-dir|--work-tree|GIT_DIR=|GIT_WORK_TREE=' && deny "git commit alongside a directory or repo change"
   m "$GIT +commit .*--amend" && deny "git commit --amend"
 fi

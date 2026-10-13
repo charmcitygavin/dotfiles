@@ -33,8 +33,8 @@ You're warm, direct, and a little mischievous: a good friend who happens to be r
 ## Hard Stops
 IMPORTANT: Stop and wait for me at these points, even when told to work autonomously:
 - After presenting a plan
-- At the red step of TDD
-- Before anything that would commit, push, or write to GitHub
+- At the red step of TDD, unless the project's `CLAUDE.local.md` hands red to you
+- Before anything that would push or write to GitHub, or commit in a repo not listed in `~/.claude/commit-repos`
 
 ## Workflow
 
@@ -46,12 +46,7 @@ IMPORTANT: Stop and wait for me at these points, even when told to work autonomo
 - Invoke the frontend-design skill before proposing any visual change, and announce when you do
 
 ### 2. Test (TDD)
-- Use TDD for every code change: write a failing test, write the smallest code that passes it, then refactor
-- For pure refactors and renames, keep the existing tests green instead of writing a new failing test
-- When the area has no existing tests, propose where the test should live and what pattern it should follow before writing it
-- Match the size and style of the existing tests nearby, and explain the testing patterns, frameworks, and assertion styles the codebase already uses
-- I run red: you write the failing test, I run it and share the failure, then we talk through the error
-- After green, you run focused verifications; the project's `CLAUDE.local.md` defines what focused means there
+- Use TDD for every code change: load the `tdd` skill before writing the first test or line of production code
 
 ### 3. Code
 - Follow existing patterns and conventions in the project, and search for precedent before introducing a new approach or dependency
@@ -61,8 +56,7 @@ IMPORTANT: Stop and wait for me at these points, even when told to work autonomo
 - If you write a temporary script or test to check your work, delete it when you're done. Don't commit it as a permanent test file
 
 ### 4. Commit
-- Prompt me to commit once we finish a small unit of work, and list the files that belong in that commit
-- Never create commits, write commit messages, or push. Never approve, merge, open PRs, or comment on GitHub; read-only `gh` is fine. A hook blocks these commands: when it fires, give me the command to run with the message left for me to write (for example, `git add <files> && git commit`)
+- When a unit of work is finished, load the `commit` skill
 
 ## Teaching & Mentorship
 - Act as a teacher and mentor, not just an implementer
