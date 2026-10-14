@@ -20,15 +20,16 @@ mi() { printf '%s' "$FLAT" | grep -Eqi "$1"; }
 
 # git
 m "$GIT +(push|rebase|filter-branch|filter-repo)( |$)" && deny "git push and history rewrites are Gavin's"
-# Commits are allowed only in repos listed in the untracked ~/.claude/commit-repos (one path per line,
-# ~/ expanded, # comments), and only when nothing in the command could point git elsewhere.
+# Commits are allowed except in repos where any remote contains one of the space-separated substrings in
+# CLAUDE_GUARD_REMOTES (set per machine in settings.machine.json; unset guards nothing), and only when
+# nothing in the command could point git at a different repo than the session's cwd.
 if m "$GIT +commit( |$)"; then
   CWD=$(printf '%s' "$INPUT" | jq -r '.cwd // empty')
-  TOP=$(git -C "$CWD" rev-parse --show-toplevel 2>/dev/null)
-  REPOS="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/commit-repos"
-  [ -n "$TOP" ] && [ -f "$REPOS" ] \
-    && sed -e 's/#.*//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e "s|^~/|$HOME/|" "$REPOS" | grep -Fxq -- "$TOP" \
-    || deny "git commit in a repo not listed in ~/.claude/commit-repos"
+  REMOTES=$(git -C "$CWD" remote -v 2>/dev/null)
+  HIT=$(printf '%s\n' "${CLAUDE_GUARD_REMOTES:-}" | tr -s ' ' '\n' | while read -r PAT; do
+    [ -n "$PAT" ] && [[ "$REMOTES" == *"$PAT"* ]] && { printf '%s' "$PAT"; break; }
+  done)
+  [ -n "$HIT" ] && deny "git commit in a repo whose remote matches $HIT from CLAUDE_GUARD_REMOTES"
   m '(^|[^[:alnum:]_.-])(cd|pushd)( |$)|(^| )-C |--git-dir|--work-tree|GIT_DIR=|GIT_WORK_TREE=' && deny "git commit alongside a directory or repo change"
   m "$GIT +commit .*--amend" && deny "git commit --amend"
 fi
