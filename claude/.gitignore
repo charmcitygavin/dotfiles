@@ -2,7 +2,6 @@
 *
 !.gitignore
 !CLAUDE.md
-!philosophy.md
 !settings.base.json
 !render-settings.sh
 !statusline-command.sh
