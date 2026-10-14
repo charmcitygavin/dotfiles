@@ -59,4 +59,11 @@ expect block "cd alongside a commit, even unguarded" "$PLAIN" "cd $WORK && git c
 expect block "commit --amend, even unguarded" "$PLAIN" 'git commit --amend --no-edit' '' 'amend'
 expect block "push, even unguarded" "$PLAIN" 'git push' '' 'push'
 
+expect allow "issue create in a repo whose origin doesn't match" "$MINE" 'gh issue create --title x --body y' 'github.com:acme/'
+expect block "issue comment in a repo whose origin matches" "$WORK" 'gh issue comment 1 --body y' 'github.com:acme/' 'github.com:acme/'
+expect block "issue edit in a fork whose upstream matches" "$FORK" 'gh issue edit 1 --add-label x' 'github.com/acme/' 'github.com/acme/'
+expect block "issue close aimed at another repo, even unguarded" "$MINE" 'gh issue close 1 -R acme/app' '' 'directory or repo change'
+expect block "issue delete, even unguarded" "$MINE" 'gh issue delete 1 --yes' '' 'delete or transfer'
+expect block "pr create, even unguarded" "$MINE" 'gh pr create --fill' '' 'gh pr write'
+
 [ "$FAILS" -eq 0 ]

@@ -18,17 +18,23 @@ GIT='(^|[^[:alnum:]_.-])git( +(-C +[^ ]+|--no-pager|-c +[^ ]+|--git-dir=[^ ]+|--
 m() { printf '%s' "$FLAT" | grep -Eq "$1"; }
 mi() { printf '%s' "$FLAT" | grep -Eqi "$1"; }
 
+# Commits and gh issue writes are allowed except in repos where any remote contains one of the space-separated
+# substrings in CLAUDE_GUARD_REMOTES (set per machine in settings.machine.json; unset guards nothing), and only
+# when nothing in the command could point them at a different repo than the session's cwd.
+# guarded_remote prints the first pattern that matches a remote of the session's cwd, or nothing.
+guarded_remote() {
+  local cwd remotes
+  cwd=$(printf '%s' "$INPUT" | jq -r '.cwd // empty')
+  remotes=$(git -C "$cwd" remote -v 2>/dev/null)
+  printf '%s\n' "${CLAUDE_GUARD_REMOTES:-}" | tr -s ' ' '\n' | while read -r PAT; do
+    [ -n "$PAT" ] && [[ "$remotes" == *"$PAT"* ]] && { printf '%s' "$PAT"; break; }
+  done
+}
+
 # git
 m "$GIT +(push|rebase|filter-branch|filter-repo)( |$)" && deny "git push and history rewrites are Gavin's"
-# Commits are allowed except in repos where any remote contains one of the space-separated substrings in
-# CLAUDE_GUARD_REMOTES (set per machine in settings.machine.json; unset guards nothing), and only when
-# nothing in the command could point git at a different repo than the session's cwd.
 if m "$GIT +commit( |$)"; then
-  CWD=$(printf '%s' "$INPUT" | jq -r '.cwd // empty')
-  REMOTES=$(git -C "$CWD" remote -v 2>/dev/null)
-  HIT=$(printf '%s\n' "${CLAUDE_GUARD_REMOTES:-}" | tr -s ' ' '\n' | while read -r PAT; do
-    [ -n "$PAT" ] && [[ "$REMOTES" == *"$PAT"* ]] && { printf '%s' "$PAT"; break; }
-  done)
+  HIT=$(guarded_remote)
   [ -n "$HIT" ] && deny "git commit in a repo whose remote matches $HIT from CLAUDE_GUARD_REMOTES"
   m '(^|[^[:alnum:]_.-])(cd|pushd)( |$)|(^| )-C |--git-dir|--work-tree|GIT_DIR=|GIT_WORK_TREE=' && deny "git commit alongside a directory or repo change"
   m "$GIT +commit .*--amend" && deny "git commit --amend"
@@ -41,7 +47,12 @@ m "$GIT +(checkout|restore)( +-[-a-zA-Z]+)* +(-- +)?(\.|\*|:/)( |$)" && deny "ch
 
 # gh writes
 m '(^|[^[:alnum:]_.-])gh +pr +(create|merge|review|comment|edit|close|ready|lock|unlock|reopen|update-branch)( |$)' && deny "gh pr write"
-m '(^|[^[:alnum:]_.-])gh +issue +(create|comment|edit|close|delete|lock|unlock|reopen|transfer|pin|unpin|develop)( |$)' && deny "gh issue write"
+if m '(^|[^[:alnum:]_.-])gh +issue +(create|comment|edit|close|lock|unlock|reopen|pin|unpin|develop)( |$)'; then
+  HIT=$(guarded_remote)
+  [ -n "$HIT" ] && deny "gh issue write in a repo whose remote matches $HIT from CLAUDE_GUARD_REMOTES"
+  m '(^|[^[:alnum:]_.-])(cd|pushd)( |$)|(^| )(-R|--repo)|GH_REPO=' && deny "gh issue write alongside a directory or repo change"
+fi
+m '(^|[^[:alnum:]_.-])gh +issue +(delete|transfer)( |$)' && deny "gh issue delete or transfer"
 m '(^|[^[:alnum:]_.-])gh +(release +(create|delete|edit|upload)|repo +(delete|edit|rename|archive|fork|sync)|label +(create|delete|edit|clone))( |$)' && deny "gh repo write"
 if m '(^|[^[:alnum:]_.-])gh +api( |$)'; then
   m '(-X|--method) *(POST|PATCH|PUT|DELETE)|(^| )-(f|F) |--field|--raw-field|--input|--input=' && deny "gh api with a write method or body"
