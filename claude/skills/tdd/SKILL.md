@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Test-driven development loop (red, green, refactor) for every code change. Load before writing the first test or line of production code, and before changing or deleting a test.
+description: Test-driven development loop (red, green, refactor). Load before adding or changing behavior in a project that has a test suite, and before changing or deleting a test.
 ---
 
 # TDD
@@ -30,4 +30,4 @@ Gavin works in a predictable loop: **plan → red → green → refactor → com
 
 **Pure refactors and renames** add no new test. The existing suite stays green at every step.
 
-**Style** matches the size and style of nearby tests. The first time a project uses a framework idiom (assertion style, fixtures, parameterization), explain it in terms of what Gavin already knows: Python, pytest, and Django.
+**Style** matches the size and style of nearby tests. The first time a project uses a framework idiom (assertion style, fixtures, parameterization), explain it.
