@@ -1,35 +1,47 @@
 #!/bin/bash
-# Claude Code status line: model, context used, five hour usage with its reset
-# time, and seven day usage. Each figure is colored by how close it is to full.
+# Claude Code status line: model, context used as tokens and a percentage, and
+# five hour and seven day usage with their reset times. Each figure stays dim
+# gray until it nears its limit, then turns yellow and red: at 80k and 100k
+# tokens for context, and at 50% and 80% for the usage windows.
 
 input=$(cat)
 
 model=$(echo "$input" | jq -r '.model.display_name')
 ctx=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
+tokens=$(echo "$input" | jq -r '.context_window.total_input_tokens // empty')
 five=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
 five_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
 week=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
+week_reset=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty')
 
-# Print a dim percentage, shifting toward red as it climbs.
+# Print a figure's text in dim gray, turning dim yellow once its value reaches
+# warn and bright red once it reaches over.
 figure() {
-    local used=$1 label=$2 suffix=$3
-    local pct color
-    pct=$(awk -v u="$used" 'BEGIN { printf "%.0f", u }')
-    if awk -v u="$used" 'BEGIN { exit !(u >= 80) }'; then
-        color='\033[2;31m'
-    elif awk -v u="$used" 'BEGIN { exit !(u >= 50) }'; then
+    local value=$1 warn=$2 over=$3 text=$4
+    local color='\033[2m'
+    if awk -v v="$value" -v t="$over" 'BEGIN { exit !(v >= t) }'; then
+        color='\033[91m'
+    elif awk -v v="$value" -v t="$warn" 'BEGIN { exit !(v >= t) }'; then
         color='\033[2;33m'
-    else
-        color='\033[2;32m'
     fi
-    printf "${color}%s %s%%%s\033[0m" "$label" "$pct" "$suffix"
+    printf "${color}%s\033[0m" "$text"
+}
+
+# Round a percentage to a whole number and add its sign.
+percent() {
+    awk -v u="$1" 'BEGIN { printf "%.0f%%", u }'
 }
 
 printf '\033[2m%s\033[0m' "$model"
 
 if [ -n "$ctx" ]; then
     printf '  '
-    figure "$ctx" "ctx" ""
+    if [ -n "$tokens" ]; then
+        k=$(awk -v t="$tokens" 'BEGIN { printf "%.0fk", t / 1000 }')
+        figure "$tokens" 80000 100000 "$k ($(percent "$ctx"))"
+    else
+        figure "$ctx" 50 80 "$(percent "$ctx")"
+    fi
 fi
 
 if [ -n "$five" ]; then
@@ -38,10 +50,14 @@ if [ -n "$five" ]; then
         suffix=" ↻$(date -r "$five_reset" +%H:%M)"
     fi
     printf '  '
-    figure "$five" "5h" "$suffix"
+    figure "$five" 50 80 "5h $(percent "$five")$suffix"
 fi
 
 if [ -n "$week" ]; then
+    suffix=""
+    if [ -n "$week_reset" ]; then
+        suffix=" ↻$(date -r "$week_reset" +%a)"
+    fi
     printf '  '
-    figure "$week" "7d" ""
+    figure "$week" 50 80 "7d $(percent "$week")$suffix"
 fi
