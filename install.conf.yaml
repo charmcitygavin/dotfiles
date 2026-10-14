@@ -41,7 +41,6 @@
     ${HOME}/.claude/CLAUDE.md: { path: claude/CLAUDE.md, force: true }
     ${HOME}/.claude/statusline-command.sh: { path: claude/statusline-command.sh, force: true }
     ${HOME}/.claude/hooks/guard-bash.sh: { path: claude/hooks/guard-bash.sh, force: true }
-    ${HOME}/.claude/skills/commit: { path: claude/skills/commit, force: true }
 
     # ${XDG_CONFIG_HOME}/git/.gitconfig: general/.gitconfig
 

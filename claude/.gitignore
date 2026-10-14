@@ -8,6 +8,3 @@
 !hooks/
 !hooks/guard-bash.sh
 !hooks/guard-bash.test.sh
-!skills/
-!skills/*/
-!skills/*/SKILL.md
