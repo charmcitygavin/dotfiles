@@ -45,6 +45,7 @@
     "mattpocock-skills@claude-plugins-official": true
   },
   "syncClaudeAiPlugins": false,
+  "syncClaudeAiSkills": false,
   "disableClaudeAiConnectors": true,
   "feedbackDrafts": "off",
   "alwaysThinkingEnabled": true,
