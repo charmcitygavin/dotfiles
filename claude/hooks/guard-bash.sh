@@ -6,8 +6,9 @@ INPUT=$(cat)
 CMD=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // empty')
 [ -z "$CMD" ] && exit 0
 
+# A second argument replaces the hand-off hint when Claude can do the thing another way.
 deny() {
-  printf 'guard-bash blocked this: %s. Give Gavin the command to run himself.\n' "$1" >&2
+  printf 'guard-bash blocked this: %s. %s\n' "$1" "${2:-Give Gavin the command to run himself.}" >&2
   exit 2
 }
 
@@ -34,9 +35,10 @@ guarded_remote() {
 # git
 m "$GIT +(push|rebase|filter-branch|filter-repo)( |$)" && deny "git push and history rewrites are Gavin's"
 if m "$GIT +commit( |$)"; then
+  m '(^|[^[:alnum:]_.-])(cd|pushd)( |$)|(^| )-C |--git-dir|--work-tree|GIT_DIR=|GIT_WORK_TREE=' && deny "git commit alongside a directory or repo change" \
+    "Run the cd as its own Bash call, then commit; the guard checks the remote of the directory the shell lands in, which must be one of the session's working directories."
   HIT=$(guarded_remote)
   [ -n "$HIT" ] && deny "git commit in a repo whose remote matches $HIT from CLAUDE_GUARD_REMOTES"
-  m '(^|[^[:alnum:]_.-])(cd|pushd)( |$)|(^| )-C |--git-dir|--work-tree|GIT_DIR=|GIT_WORK_TREE=' && deny "git commit alongside a directory or repo change"
   m "$GIT +commit .*--amend" && deny "git commit --amend"
 fi
 m "$GIT +reset +(-[a-zA-Z]+ +)*(--hard|--merge)" && deny "git reset --hard"
@@ -54,7 +56,10 @@ if m '(^|[^[:alnum:]_.-])gh +issue +(create|comment|edit|close|lock|unlock|reope
 fi
 m '(^|[^[:alnum:]_.-])gh +issue +(delete|transfer)( |$)' && deny "gh issue delete or transfer"
 m '(^|[^[:alnum:]_.-])gh +(release +(create|delete|edit|upload)|repo +(delete|edit|rename|archive|fork|sync)|label +(create|delete|edit|clone))( |$)' && deny "gh repo write"
-if m '(^|[^[:alnum:]_.-])gh +api( |$)'; then
+if m '(^|[^[:alnum:]_.-])gh +api +graphql( |$)'; then
+  # GraphQL always POSTs, so the query text is the only read-or-write signal; a query the guard can't read counts as a write.
+  mi 'mutation|=@|--input|\$\(|`' && deny "gh api graphql with a mutation, or a query read from a file or command"
+elif m '(^|[^[:alnum:]_.-])gh +api( |$)'; then
   m '(-X|--method) *(POST|PATCH|PUT|DELETE)|(^| )-(f|F) |--field|--raw-field|--input|--input=' && deny "gh api with a write method or body"
 fi
 

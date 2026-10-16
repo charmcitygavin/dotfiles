@@ -56,6 +56,8 @@ mkdir "$TMP/not-a-repo"
 expect allow "commit outside any repo is left to git" "$TMP/not-a-repo" 'git commit -m "x"' 'github.com:acme/'
 
 expect block "cd alongside a commit, even unguarded" "$PLAIN" "cd $WORK && git commit -m x" 'github.com:acme/' 'directory or repo change'
+expect block "cd out of a guarded repo to commit names the separate call" "$WORK" "cd $MINE && git commit -m x" \
+  'github.com:acme/' 'cd as its own Bash call'
 expect block "commit --amend, even unguarded" "$PLAIN" 'git commit --amend --no-edit' '' 'amend'
 expect block "push, even unguarded" "$PLAIN" 'git push' '' 'push'
 
@@ -65,5 +67,12 @@ expect block "issue edit in a fork whose upstream matches" "$FORK" 'gh issue edi
 expect block "issue close aimed at another repo, even unguarded" "$MINE" 'gh issue close 1 -R acme/app' '' 'directory or repo change'
 expect block "issue delete, even unguarded" "$MINE" 'gh issue delete 1 --yes' '' 'delete or transfer'
 expect block "pr create, even unguarded" "$MINE" 'gh pr create --fill' '' 'gh pr write'
+
+expect allow "graphql query" "$WORK" "gh api graphql -f query='query { viewer { login } }'" 'github.com:acme/'
+expect block "graphql mutation, even unguarded" "$MINE" "gh api graphql -f query='mutation { addStar(input: {}) { clientMutationId } }'" \
+  '' 'mutation'
+expect block "graphql query read from a file" "$MINE" 'gh api graphql -F query=@q.graphql' '' 'from a file or command'
+expect block "graphql query built by a command" "$MINE" 'gh api graphql -f query="$(cat q.graphql)"' '' 'from a file or command'
+expect block "REST api with a body, even unguarded" "$MINE" 'gh api repos/acme/app/issues -f title=x' '' 'write method or body'
 
 [ "$FAILS" -eq 0 ]
